@@ -8,7 +8,7 @@ const Modal = (onClose, img) => {
         return () => {
             window.removeEventListener('keydown', keyDownHandler);
         };
-        }, []);
+    }, []);
     // componentDidMount() {
     //     window.addEventListener('keydown', this.keyDownHandler);
     // };

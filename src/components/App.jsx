@@ -46,13 +46,14 @@ const App = () => {
   // };
 
   const updateGallery = () => {
+    setStatus('pending');
     fetchPictures( query, page)
       .then(pictures => {
         if (pictures.totalHits === 0) {
           toast(`Nothing was found for query ${query}`);
           console.log(pictures,'No pictures');
         }
-      console.log(pictures.hits);
+        console.log(pictures.hits);
         setPictures(prevState=>[...prevState, ...pictures.hits]);
         setStatus('resolved');
         setTotalHits(pictures.totalHits);
