@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { useState, useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loader from "./Loader";
@@ -11,90 +11,112 @@ import { fetchPictures } from "api/api";
 
 
 import css from "../css/app.module.css";
-export class App extends Component {
-  state = {
-    query: '',
-    showModal: false,  
-    modalData: null,
-    pictures: [],
-    error: null,
-    status: 'idle',
-    page: 1,
-    totalHits: 0,
-  };
+const App = () => {
+  const [ query, setQuery ] = useState('');
+  const [ showModal, setShowModal ] = useState(false);
+  const [ modalData, setModalData ] = useState();
+  const [ pictures, setPictures ] = useState([]);
+  const [ error, setError ] = useState();
+  const [ status, setStatus ] = useState('idle');
+  const [ page, setPage ] = useState(1);
+  const [ totalHits, setTotalHits ] = useState(0);
 
-  componentDidUpdate(prevProps, prevState) {
-    const prevQuery = prevState.query;
-    const newQuery = this.state.query;
-    if (prevQuery !== newQuery) {
-      console.log(newQuery);
-      this.setState({ pictures: [] });
-      this.updateGallery(newQuery)
-      this.setState({
-        status: 'pending',
-        page: 1,
-      });
-    }
-    if (newQuery === prevQuery && this.state.page !== prevState.page) {
-      this.updateGallery(prevQuery);
-    }
-  };
+  console.log(pictures);
 
-  updateGallery(query) {
-    fetchPictures(query, this.state.page)
+  useEffect(() => {
+    if (query) {
+      updateGallery();
+    }
+  },[query, page]);
+  // componentDidUpdate=(prevProps, prevState)=> {
+  //   const prevQuery = prevState.query;
+  //   const newQuery = query;
+  //   if (prevQuery !== newQuery) {
+  //     console.log(newQuery);
+  //     this.setState({ pictures: [] });
+  //     updateGallery(newQuery)
+  //     this.setState({
+  //       status: 'pending',
+  //       page: 1,
+  //     });
+  //   }
+  //   if (newQuery === prevQuery && page !== prevState.page) {
+  //     updateGallery(prevQuery);
+  //   }
+  // };
+
+  const updateGallery = () => {
+    fetchPictures( query, page)
       .then(pictures => {
         if (pictures.totalHits === 0) {
-          toast(`Nothing was found for query ${this.state.query}`);
+          toast(`Nothing was found for query ${query}`);
           console.log(pictures,'No pictures');
         }
       console.log(pictures.hits);
-      this.setState({
-        pictures: [...this.state.pictures, ...pictures.hits],
-        status: 'resolved',
-        totalHits: pictures.totalHits,
-      });
+        setPictures(prevState=>[...prevState, ...pictures.hits]);
+        setStatus('resolved');
+        setTotalHits(pictures.totalHits);
+      // this.setState({
+      //   pictures: [...pictures, ...pictures.hits],
+      //   status: 'resolved',
+      //   totalHits: pictures.totalHits,
+      // });
     })
     .catch(error => {
-      this.setState({ error, status: 'error' });
+      // this.setState({ error, status: 'error' });
+      setError('error');
+      setStatus('error');
     })
   }
 
-  toggleModal = (dataInModal) => {
+  const toggleModal = (dataInModal) => {
     console.log('toggleModal')
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-      modalData: dataInModal,
-    }));
+    setShowModal(prevState=>!prevState);
+    setModalData(dataInModal);
+    // this.setState(({ showModal }) => ({
+    //   showModal: !showModal,
+    //   modalData: dataInModal,
+    // }));
   };
   
-  hideLoadMoreButton = (totalHits, arr) => {
-    console.log(totalHits, arr.length);
-    return totalHits > arr.length;
+  const hideLoadMoreButton = (totalHits, arr) => {
+    // console.log(totalHits, arr.length);
+    if (!arr) {
+      return false;
+    } else {
+      return totalHits > arr.length;
+    }
+   
   }
 
 
-  loadMoreHandler = () => {
-    this.setState((prevState) => ({
-     page: prevState.page + 1
-    }));
+  const loadMoreHandler = () => {
+    setPage(prevState => prevState + 1)
+      // this.setState((prevState) => ({
+      //  page: prevState.page + 1
+      // }));
   };
   
-  submitHandler = query => {
-    this.setState({query});
+  const submitHandler = query => {
+    setQuery(query);
+    setPictures([]);
+    setPage(1);
+    setError();
+    // this.setState({query});
   };
   
-  render() {
-    const {pictures, showModal} = this.state;
+    // const {pictures, showModal} = this.state;
     return <div className={css.App}>
-      {showModal && <Modal onClose={this.toggleModal} img={this.state.modalData }/>}
-      <Searchbar onSubmit={this.submitHandler} />
-      {this.state.status==='pending' && <Loader />}
-      <ImageGallery pictures={pictures} showModal={this.toggleModal} />
-      {(this.hideLoadMoreButton(this.state.totalHits,this.state.pictures)) && <LoadMoreBtn onClick={this.loadMoreHandler} />}
+      {showModal && <Modal onClose={toggleModal} img={modalData }/>}
+      <Searchbar onSubmit={submitHandler} />
+      {status==='pending' && <Loader />}
+      {(pictures)&&<ImageGallery pictures={pictures} showModal={toggleModal} />}
+      {(hideLoadMoreButton(totalHits, pictures)) && <LoadMoreBtn onClick={loadMoreHandler} />}
       {<ToastContainer /> }
     </div>
-  }
 };
+
+export default App;
 
         
         // if (status === 'idle') {
