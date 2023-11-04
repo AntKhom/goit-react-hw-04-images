@@ -16,7 +16,7 @@ const App = () => {
   const [ showModal, setShowModal ] = useState(false);
   const [ modalData, setModalData ] = useState();
   const [ pictures, setPictures ] = useState([]);
-  const [ error, setError ] = useState();
+  const [ , setError ] = useState();
   const [ status, setStatus ] = useState('idle');
   const [ page, setPage ] = useState(1);
   const [ totalHits, setTotalHits ] = useState(0);
