@@ -4,11 +4,17 @@ import css from "../css/modal.module.css"
 const Modal = ({ onClose, img }) => {
 
     useEffect(() => {
+        const keyDownHandler = e => {
+        console.log(e.code)
+        if (e.code === 'Escape') {  
+            onClose();
+        };
+        };
         window.addEventListener('keydown', keyDownHandler);
         return () => {
             window.removeEventListener('keydown', keyDownHandler);
         };
-    }, []);
+    }, [onClose]);
     // componentDidMount() {
     //     window.addEventListener('keydown', this.keyDownHandler);
     // };
@@ -17,12 +23,7 @@ const Modal = ({ onClose, img }) => {
     //     window.removeEventListener('keydown', this.keyDownHandler);
     // };
     
-    const keyDownHandler = e => {
-        console.log(e.code)
-        if (e.code === 'Escape') {
-            onClose();
-        };
-    };
+    
 
     const backdropClickHandler = (e) => {
         if (e.currentTarget === e.target) {

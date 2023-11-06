@@ -120,14 +120,3 @@ const App = () => {
 export default App;
 
         
-        // if (status === 'idle') {
-        //     return <div>No data</div>
-        // }
-
-        // if (status === 'pending') {
-        //     return <Loader/ >
-        // }
-        
-        // if (status === 'rejected') {
-        //     return <div>{error.message}</div>
-        // }
