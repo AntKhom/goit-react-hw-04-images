@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import css from "../css/modal.module.css"
 
-const Modal = (onClose, img) => {
+const Modal = ({ onClose, img }) => {
 
     useEffect(() => {
         window.addEventListener('keydown', keyDownHandler);
@@ -20,13 +20,13 @@ const Modal = (onClose, img) => {
     const keyDownHandler = e => {
         console.log(e.code)
         if (e.code === 'Escape') {
-            this.props.onClose();
+            onClose();
         };
     };
 
     const backdropClickHandler = (e) => {
         if (e.currentTarget === e.target) {
-            this.props.onClose();
+            onClose();
         }
         
     }
