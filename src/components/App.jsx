@@ -24,28 +24,7 @@ const App = () => {
   console.log(pictures);
 
   useEffect(() => {
-    if (query) {
-      updateGallery();
-    }
-  },[query, page]);
-  // componentDidUpdate=(prevProps, prevState)=> {
-  //   const prevQuery = prevState.query;
-  //   const newQuery = query;
-  //   if (prevQuery !== newQuery) {
-  //     console.log(newQuery);
-  //     this.setState({ pictures: [] });
-  //     updateGallery(newQuery)
-  //     this.setState({
-  //       status: 'pending',
-  //       page: 1,
-  //     });
-  //   }
-  //   if (newQuery === prevQuery && page !== prevState.page) {
-  //     updateGallery(prevQuery);
-  //   }
-  // };
-
-  const updateGallery = () => {
+    const updateGallery = () => {
     setStatus('pending');
     fetchPictures( query, page)
       .then(pictures => {
@@ -69,6 +48,26 @@ const App = () => {
       setStatus('error');
     })
   }
+    if (query) {
+      updateGallery();
+    }
+  },[query, page]);
+  // componentDidUpdate=(prevProps, prevState)=> {
+  //   const prevQuery = prevState.query;
+  //   const newQuery = query;
+  //   if (prevQuery !== newQuery) {
+  //     console.log(newQuery);
+  //     this.setState({ pictures: [] });
+  //     updateGallery(newQuery)
+  //     this.setState({
+  //       status: 'pending',
+  //       page: 1,
+  //     });
+  //   }
+  //   if (newQuery === prevQuery && page !== prevState.page) {
+  //     updateGallery(prevQuery);
+  //   }
+  // };
 
   const toggleModal = (dataInModal) => {
     console.log('toggleModal')
